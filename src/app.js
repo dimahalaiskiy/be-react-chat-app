@@ -15,6 +15,7 @@ require('./database/index.js');
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+app.use(cookieParser());
 app.use(
   cors({
     origin: ['http://127.0.0.1:5173', 'https://react-chap-app.vercel.app'],
@@ -31,13 +32,12 @@ app.use(express.json());
 app.use(express.urlencoded());
 
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
 app.use(
   session({
     name: '_session',
-    secret: 'ASDSAASDASASDASDASD',
+    secret: 'VERY_SECRET',
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: true,
     store: MongoStore.create({
       mongoUrl:
         'mongodb+srv://dimagalaiskiy:qwerty123@learnmongo.pxcxty7.mongodb.net/test',
