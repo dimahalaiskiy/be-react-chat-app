@@ -23,8 +23,10 @@ app.use(
     methods: ['GET', 'PUT', 'POST', 'DELETE'],
   })
 );
-app.use((_, res, next) => {
-  res.set('Access-Control-Allow-Credentials', 'true');
+
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', 'http://127.0.0.1:5173');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
   next();
 });
 
@@ -34,14 +36,15 @@ app.use(express.urlencoded());
 app.use(express.urlencoded({ extended: false }));
 app.use(
   session({
-    name: '_session',
-    secret: 'VERY_SECRET',
+    name: 'session',
+    secret: 'SECRETKEYasd',
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     store: MongoStore.create({
       mongoUrl:
         'mongodb+srv://dimagalaiskiy:qwerty123@learnmongo.pxcxty7.mongodb.net/test',
     }),
+    sameSite: 'none'
   })
 );
 
