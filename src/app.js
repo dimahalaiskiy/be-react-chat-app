@@ -25,7 +25,10 @@ app.use(
 );
 
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', 'https://react-chap-app.vercel.app');
+  res.setHeader(
+    'Access-Control-Allow-Origin',
+    'https://react-chap-app.vercel.app'
+  );
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   next();
 });
@@ -44,7 +47,10 @@ app.use(
       mongoUrl:
         'mongodb+srv://dimagalaiskiy:qwerty123@learnmongo.pxcxty7.mongodb.net/test',
     }),
-    sameSite: 'none'
+    sameSite: 'none',
+    cookie: {
+      expires: new Date('2023-04-15T00:00:00.000Z'), // April 15, 2023
+    },
   })
 );
 
