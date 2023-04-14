@@ -48,9 +48,9 @@ app.use(
         'mongodb+srv://dimagalaiskiy:qwerty123@learnmongo.pxcxty7.mongodb.net/test',
     }),
     cookie: {
-      expires: new Date('2023-04-15T00:00:00.000Z'), // April 15, 2023
+      expires: new Date('2023-04-15T00:00:00.000Z'),
       secure: true,
-      sameSite: 'none',
+      SameSite: 'none',
     },
   })
 );
