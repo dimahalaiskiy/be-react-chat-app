@@ -49,8 +49,7 @@ app.use(
     }),
     cookie: {
       expires: new Date('2023-04-15T00:00:00.000Z'),
-      secure: true,
-      SameSite: 'none',
+      ameSite: 'strict',
     },
   })
 );
