@@ -50,6 +50,7 @@ app.use(
     sameSite: 'none',
     cookie: {
       expires: new Date('2023-04-15T00:00:00.000Z'), // April 15, 2023
+      secure: true,
     },
   })
 );
