@@ -25,11 +25,15 @@ app.use(
 );
 
 app.use((req, res, next) => {
+<<<<<<< HEAD
   res.setHeader(
     'Access-Control-Allow-Origin',
     'https://react-chap-app.vercel.app'
   );
+=======
+>>>>>>> dev
   res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Origin', 'http://127.0.0.1:5173');
   next();
 });
 
@@ -39,7 +43,6 @@ app.use(express.urlencoded());
 app.use(express.urlencoded({ extended: false }));
 app.use(
   session({
-    name: 'session',
     secret: 'SECRETKEYasd',
     resave: false,
     saveUninitialized: false,
@@ -48,8 +51,15 @@ app.use(
         'mongodb+srv://dimagalaiskiy:qwerty123@learnmongo.pxcxty7.mongodb.net/test',
     }),
     cookie: {
+<<<<<<< HEAD
       expires: new Date('2023-04-15T00:00:00.000Z'),
       ameSite: 'strict',
+=======
+      maxAge: 3600000,
+      httpOnly: false,
+      secure: true,
+      sameSite: 'none',
+>>>>>>> dev
     },
   })
 );

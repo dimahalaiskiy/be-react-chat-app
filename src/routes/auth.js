@@ -6,7 +6,7 @@ const { hashPassword } = require('../utils/helpers');
 const router = Router();
 
 router.post('/login', passport.authenticate('local'), (req, res) =>
-  res.cookie(req.sessionID).sendStatus(200)
+  res.sendStatus(200)
 );
 
 router.post('/register', async (req, res) => {
