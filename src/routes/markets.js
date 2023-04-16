@@ -15,7 +15,7 @@ const supermarkets = [
 ];
 
 router.use((req, res, next) => {
-  if (req.session.user) next();
+  if (req.user) next();
   else res.send(401);
 });
 

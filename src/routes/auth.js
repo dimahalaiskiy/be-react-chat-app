@@ -23,7 +23,8 @@ router.post('/register', async (req, res) => {
 });
 
 router.post('/protected', async (req, res) => {
-  if (req.isAuthenticated()) {
+  console.log('req', req);
+  if (req.user) {
     res.send({ user: req.user });
   } else {
     res.status(401).send({ error: 'Unauthorized' });

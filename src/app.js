@@ -15,10 +15,9 @@ require('./database/index.js');
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-app.use(cookieParser());
 app.use(
   cors({
-    origin: ['http://127.0.0.1:5173', 'https://react-chap-app.vercel.app'],
+    origin: 'https://react-chap-app.vercel.app/',
     credentials: true,
     methods: ['GET', 'PUT', 'POST', 'DELETE'],
   })
@@ -27,22 +26,20 @@ app.use(
 app.use((req, res, next) => {
   res.setHeader(
     'Access-Control-Allow-Origin',
-    'https://react-chap-app.vercel.app'
+    'https://react-chap-app.vercel.app/'
   );
-res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
   next();
 });
 
 app.use(express.json());
-app.use(express.urlencoded());
-
-app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
 app.use(
   session({
     name: 'session',
     secret: 'SECRETKEYasd',
-    resave: false,
-    saveUninitialized: false,
+    resave: true,
+    saveUninitialized: true,
     store: MongoStore.create({
       mongoUrl:
         'mongodb+srv://dimagalaiskiy:qwerty123@learnmongo.pxcxty7.mongodb.net/test',
@@ -50,7 +47,7 @@ app.use(
     cookie: {
       maxAge: 3600000,
       httpOnly: false,
-      secure: true,
+      // secure: true,
       sameSite: 'none',
     },
   })
