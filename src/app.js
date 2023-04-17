@@ -17,7 +17,7 @@ const PORT = process.env.PORT || 3001;
 
 app.use(
   cors({
-    origin: 'https://react-chap-app.vercel.app/',
+    origin: 'https://react-chap-app.vercel.app',
     credentials: true,
     methods: ['GET', 'PUT', 'POST', 'DELETE'],
   })
@@ -26,7 +26,7 @@ app.use(
 app.use((req, res, next) => {
   res.setHeader(
     'Access-Control-Allow-Origin',
-    'https://react-chap-app.vercel.app/'
+    'https://react-chap-app.vercel.app'
   );
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   next();
@@ -38,17 +38,14 @@ app.use(
   session({
     name: 'session',
     secret: 'SECRETKEYasd',
-    resave: true,
-    saveUninitialized: true,
+    resave: false,
+    saveUninitialized: false,
     store: MongoStore.create({
       mongoUrl:
         'mongodb+srv://dimagalaiskiy:qwerty123@learnmongo.pxcxty7.mongodb.net/test',
     }),
     cookie: {
       maxAge: 3600000,
-      // httpOnly: true,
-      // secure: true,
-      sameSite: 'none',
     },
   })
 );
