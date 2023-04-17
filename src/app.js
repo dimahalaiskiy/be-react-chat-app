@@ -38,17 +38,15 @@ app.use(cookieParser());
 app.use(
   session({
     secret: 'key',
-    resave: false,
-    saveUninitialized: false,
+    resave: true,
+    saveUninitialized: true,
     store: MongoStore.create({
       mongoUrl:
         'mongodb+srv://dimagalaiskiy:qwerty123@learnmongo.pxcxty7.mongodb.net/test',
     }),
     cookie: {
       maxAge: 3600000,
-      sameSite: 'none',
       secure: false,
-      httpOnly: true,
     },
   })
 );
