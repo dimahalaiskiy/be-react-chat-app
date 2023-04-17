@@ -1,4 +1,5 @@
 const express = require('express');
+const https = require('https');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const cors = require('cors');
@@ -58,4 +59,6 @@ app.use(passport.session());
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/markets', marketsRoute);
 
-app.listen(PORT, () => console.log(`Running server on port ${PORT}`));
+https.createServer(options, app).listen(PORT, () => {
+  console.log(`Server started on https://localhost:${PORT}`);
+});
