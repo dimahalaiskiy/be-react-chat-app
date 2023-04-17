@@ -4,35 +4,31 @@ const session = require('express-session');
 const cors = require('cors');
 const MongoStore = require('connect-mongo');
 const passport = require('passport');
+
+const { corsOptions } = require('./utils/helpers');
+
 require('./strategies/local');
+require('./database/index.js');
 
 // Routes
 const marketsRoute = require('./routes/markets');
 const authRouter = require('./routes/auth');
 
-require('./database/index.js');
-
 const app = express();
 const PORT = process.env.PORT || 3001;
-app.set('trust proxy', 1);
-app.use(
-  cors({
-    origin: 'https://react-chap-app.vercel.app',
-    credentials: true,
-    methods: ['GET', 'PUT', 'POST', 'DELETE'],
-  })
-);
-
-app.use((req, res, next) => {
-  res.setHeader(
-    'Access-Control-Allow-Origin',
-    'https://react-chap-app.vercel.app'
-  );
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  next();
-});
 
 app.use(express.json());
+// app.use((req, res, next) => {
+//   res.setHeader(
+//     'Access-Control-Allow-Origin',
+//     'https://react-chap-app.vercel.app'
+//   );
+//   res.setHeader('Access-Control-Allow-Credentials', 'true');
+//   next();
+// });
+
+app.set('trust proxy', 1);
+app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(
