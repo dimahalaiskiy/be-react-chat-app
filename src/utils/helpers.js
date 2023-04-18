@@ -1,4 +1,5 @@
 const bcrypt = require('bcryptjs');
+require('dotenv').config();
 
 function hashPassword(password) {
   const salt = bcrypt.genSaltSync();
@@ -9,10 +10,7 @@ function comparePassword(raw, hash) {
   return bcrypt.compareSync(raw, hash);
 }
 
-const whitelist = [
-  'https://react-chap-app.vercel.app',
-  'http://localhost:2375',
-];
+const whitelist = [process.env.LOCAL_FE, process.env.PROD_FE];
 
 const corsOptions = {
   origin: function (origin, callback) {

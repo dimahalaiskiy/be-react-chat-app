@@ -1,8 +1,7 @@
 const mongoose = require('mongoose');
+require('dotenv').config();
 
 mongoose
-  .connect(
-    'mongodb+srv://dimagalaiskiy:qwerty123@learnmongo.pxcxty7.mongodb.net/test'
-  )
+  .connect(process.env.MONGO_DB)
   .then(() => console.log('Connected successfully to Mongo DB'))
   .catch((err) => console.log(err));

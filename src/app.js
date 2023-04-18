@@ -7,6 +7,7 @@ const passport = require('passport');
 
 const { corsOptions } = require('./utils/helpers');
 
+require('dotenv').config();
 require('./strategies/local');
 require('./database/index.js');
 
@@ -29,13 +30,13 @@ app.use(
     resave: true,
     saveUninitialized: true,
     store: MongoStore.create({
-      mongoUrl:
-        'mongodb+srv://dimagalaiskiy:qwerty123@learnmongo.pxcxty7.mongodb.net/test',
+      mongoUrl: process.env.MONGO_DB,
     }),
     cookie: {
       maxAge: 3600000,
-      secure: true,
-      sameSite: 'none',
+      secure: process.env.STAGE === 'production',
+      httpOnly: process.env.STAGE === 'development',
+      sameSite: process.env.STAGE === 'development' ? 'lax' : 'none',
     },
   })
 );
