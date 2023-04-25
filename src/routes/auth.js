@@ -5,9 +5,7 @@ const { hashPassword } = require('../utils/helpers');
 
 const router = Router();
 
-router.post('/login', passport.authenticate('local'), (req, res) =>
-  res.sendStatus(200)
-);
+router.post('/login', passport.authenticate('local'), (req, res) => res.sendStatus(200));
 
 router.post('/register', async (req, res) => {
   const { email, nickname } = req.body;
@@ -28,6 +26,16 @@ router.post('/protected', async (req, res) => {
     res.send({ user: req.user });
   } else {
     res.status(401).send({ error: 'Unauthorized' });
+  }
+});
+
+router.post('/logout', async (req, res) => {
+  if (req.user) {
+    req.session.destroy();
+    res.clearCookie('connect.sid');
+    return res.json({ msg: 'Logout success!' });
+  } else {
+    return res.json({ msg: 'No user to log out!' });
   }
 });
 
