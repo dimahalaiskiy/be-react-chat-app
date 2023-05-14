@@ -7,7 +7,9 @@ const passport = require('passport');
 
 const { corsOptions } = require('./utils/helpers');
 
-require('dotenv').config();
+require('dotenv').config({ 
+  path: ['.env', '.env.local']
+});
 require('./strategies/local');
 require('./database/index.js');
 
