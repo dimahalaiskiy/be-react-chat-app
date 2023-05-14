@@ -36,7 +36,7 @@ app.use(
       maxAge: 3600000,
       secure: process.env.ENV_TYPE === 'production',
       httpOnly: process.env.ENV_TYPE === 'development',
-      sameSite: 'none',
+      sameSite: process.env.ENV_TYPE === 'development' ? 'lax' : 'none',
     },
   })
 );
