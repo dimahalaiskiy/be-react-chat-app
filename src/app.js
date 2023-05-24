@@ -36,9 +36,9 @@ app.use(
     }),
     cookie: {
       maxAge: 3600000,
-      // secure: process.env.ENV_TYPE === "production",
+      secure: process.env.ENV_TYPE === "production",
       httpOnly: process.env.ENV_TYPE === "development",
-      // sameSite: process.env.ENV_TYPE === "development" ? "lax" : "none",
+      sameSite: process.env.ENV_TYPE === "development" ? "lax" : "none",
     },
   })
 );
