@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const UserSchema = new mongoose.Schema({
   email: {
@@ -20,6 +20,11 @@ const UserSchema = new mongoose.Schema({
     required: true,
     default: new Date(),
   },
+  avatar: {
+    type: mongoose.SchemaTypes.String,
+    required: false,
+    default: null,
+  },
 });
 
-module.exports = mongoose.model('users', UserSchema);
+module.exports = mongoose.model("users", UserSchema);
