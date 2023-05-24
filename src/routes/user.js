@@ -15,13 +15,19 @@ router.use((req, res, next) => {
 });
 
 cloudinary.config({
-  cloud_name: "dxemwacau",
-  api_key: "179366825177874",
-  api_secret: "p4pUkEZAB_AblA0sOzrhbqfpQ1E",
+  cloud_name: process.env.IMAGE_CLOUD_NAME,
+  api_key: process.env.IMAGE_CLOUD_API_KEY,
+  api_secret: process.env.IMAGE_CLOUD_API_SECRET_KEY,
 });
 
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, "./uploads"),
+  destination: (req, file, cb) =>
+    cb(
+      null,
+      process.env.ENV_TYPE === "production"
+        ? path.join(__dirname, "../uploads")
+        : "./uploads"
+    ),
   filename: (req, file, cb) => {
     const uniqueName = `${Date.now()}-${Math.round(
       Math.random() * 1e9
