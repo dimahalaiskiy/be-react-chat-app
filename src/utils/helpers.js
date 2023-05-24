@@ -1,5 +1,5 @@
-const bcrypt = require('bcryptjs');
-require('dotenv').config();
+const bcrypt = require("bcryptjs");
+require("dotenv").config();
 
 function hashPassword(password) {
   const salt = bcrypt.genSaltSync();
@@ -13,15 +13,15 @@ function comparePassword(raw, hash) {
 const whitelist = [process.env.LOCAL_FE, process.env.PROD_FE];
 
 const corsOptions = {
-  origin: function (origin, callback) {
+  origin(origin, callback) {
     if (whitelist.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      callback(new Error("Not allowed by CORS"));
     }
   },
   credentials: true,
-  methods: ['GET', 'PUT', 'POST', 'DELETE'],
+  methods: ["GET", "PUT", "POST", "DELETE"],
 };
 
 module.exports = {

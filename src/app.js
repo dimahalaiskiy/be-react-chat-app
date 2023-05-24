@@ -1,32 +1,34 @@
-const express = require('express');
-const cookieParser = require('cookie-parser');
-const session = require('express-session');
-const cors = require('cors');
-const MongoStore = require('connect-mongo');
-const passport = require('passport');
+const express = require("express");
+const cors = require("cors");
+const cookieParser = require("cookie-parser");
+const MongoStore = require("connect-mongo");
+const session = require("express-session");
+const passport = require("passport");
 
-const { corsOptions } = require('./utils/helpers');
+const { corsOptions } = require("./utils/helpers");
 
-require('dotenv').config();
-require('./strategies/local');
-require('./database/index.js');
+require("dotenv").config({
+  path: [".env", ".env.local"],
+});
+require("./strategies/local");
+require("./database/index");
 
 // Routes
-const marketsRoute = require('./routes/markets');
-const authRouter = require('./routes/auth');
+const authRouter = require("./routes/auth");
+const userRouter = require("./routes/user");
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
 app.use(express.json());
 
-app.set('trust proxy', 1);
+app.set("trust proxy", 1);
 app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(
   session({
-    secret: 'key',
+    secret: "key",
     resave: true,
     saveUninitialized: true,
     store: MongoStore.create({
@@ -34,9 +36,9 @@ app.use(
     }),
     cookie: {
       maxAge: 3600000,
-      secure: process.env.ENV_TYPE === 'production',
-      httpOnly: process.env.ENV_TYPE === 'development',
-      sameSite: process.env.ENV_TYPE === 'development' ? 'lax' : 'none',
+      secure: process.env.ENV_TYPE === "production",
+      httpOnly: process.env.ENV_TYPE === "development",
+      sameSite: process.env.ENV_TYPE === "development" ? "lax" : "none",
     },
   })
 );
@@ -44,7 +46,7 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use('/api/v1/auth', authRouter);
-app.use('/api/v1/markets', marketsRoute);
+app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/user", userRouter);
 
 app.listen(PORT, () => console.log(`Running server on port ${PORT}`));
