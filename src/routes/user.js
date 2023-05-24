@@ -25,7 +25,7 @@ const storage = multer.diskStorage({
     cb(
       null,
       process.env.ENV_TYPE === "production"
-        ? path.join(__dirname, "../uploads")
+        ? path.join(process.env.PWD, "uploads")
         : "./uploads"
     ),
   filename: (req, file, cb) => {
