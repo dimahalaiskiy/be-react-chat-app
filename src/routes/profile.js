@@ -1,7 +1,7 @@
-/* eslint-disable no-underscore-dangle */
 const { Router } = require("express");
 const multer = require("multer");
 const path = require("path");
+const fs = require("fs");
 const cloudinary = require("cloudinary");
 const User = require("../database/schemas/User");
 
@@ -45,7 +45,7 @@ router.post("/avatar", async (req, res) => {
   // eslint-disable-next-line consistent-return
   upload(req, res, async (err) => {
     if (err) {
-      return res.status(404).json({ msg: err.message });
+      return res.status(404).json({ msg: err });
     }
     if (!req.file) {
       return res.status(404).json({ msg: "Nothing was provided" });
@@ -62,13 +62,15 @@ router.post("/avatar", async (req, res) => {
           }
           user.avatar = result.secure_url;
           await user.save();
+          fs.unlink(req.file.path, (_) => {
+            if (err) console.log("error", _);
+          });
           return res.status(201).json(user);
-        } catch (catchedError) {
-          return res.status(500).json({ msg: catchedError.message });
+        } catch (cachedError) {
+          return res.status(500).json({ msg: cachedError.message });
         }
       } else {
-        console.log("errrrorr", error);
-        return res.status(500).json({ msg: error.message });
+        return res.status(500).json({ msg: error });
       }
     });
   });

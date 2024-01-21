@@ -15,12 +15,11 @@ router.post("/register", async (req, res) => {
   const { email, nickname } = req.body;
   const userDB = await User.findOne({ email });
   if (userDB) {
-    res.status(400).send("User already exists!");
+    res.status(409).send("User is already registered");
   } else {
     const password = hashPassword(req.body.password);
-    console.log(password);
     await User.create({ email, nickname, password });
-    res.send(201);
+    res.sendStatus(201);
   }
 });
 
@@ -28,7 +27,7 @@ router.post("/protected", async (req, res) => {
   if (req.user) {
     res.send({ user: req.user });
   } else {
-    res.status(401).send({ error: "Unauthorized" });
+    res.sendStatus(401);
   }
 });
 
@@ -36,9 +35,9 @@ router.post("/logout", async (req, res) => {
   if (req.user) {
     req.session.destroy();
     res.clearCookie("connect.sid");
-    return res.json({ msg: "Logout success!" });
+    return res.sendStatus(200);
   }
-  return res.json({ msg: "No user to log out!" });
+  return res.sendStatus(404);
 });
 
 module.exports = router;
