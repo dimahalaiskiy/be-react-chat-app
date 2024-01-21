@@ -5,6 +5,7 @@ const MongoStore = require("connect-mongo");
 const session = require("express-session");
 const passport = require("passport");
 
+const { COOKIE_MAX_LIFETIME } = require("./constants");
 const { corsOptions } = require("./utils/helpers");
 
 require("dotenv").config({
@@ -36,7 +37,7 @@ app.use(
       mongoUrl: process.env.MONGO_DB,
     }),
     cookie: {
-      maxAge: 3600000,
+      maxAge: COOKIE_MAX_LIFETIME,
       // secure: process.env.ENV_TYPE === "production",
       // httpOnly: process.env.ENV_TYPE === "development",
       // sameSite: process.env.ENV_TYPE === "development" ? "lax" : "none",
