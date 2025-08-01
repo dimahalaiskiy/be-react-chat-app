@@ -17,11 +17,13 @@ module.exports = {
     "import/no-extraneous-dependencies": 0,
     "prettier/prettier": "error",
     "no-console": "off",
+    "no-underscore-dangle": "off",
   },
   settings: {
     "import/resolver": {
-      node: {
-        moduleDirectory: ["node_modules"],
+      alias: {
+        map: [["@", "./src"]],
+        extensions: [".js", ".json"],
       },
     },
   },

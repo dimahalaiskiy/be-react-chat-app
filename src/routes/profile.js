@@ -3,8 +3,9 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 const cloudinary = require("cloudinary");
-const User = require("../database/schemas/User");
-
+const { ObjectId } = require("mongodb");
+const User = require("@/database/schemas/User");
+const { userProjection } = require("@/utils/projections");
 require("dotenv").config();
 
 const router = Router();
@@ -26,11 +27,11 @@ const storage = multer.diskStorage({
       null,
       process.env.ENV_TYPE === "production"
         ? path.join(process.env.PWD, "uploads")
-        : "./uploads"
+        : "./uploads",
     ),
   filename: (req, file, cb) => {
     const uniqueName = `${Date.now()}-${Math.round(
-      Math.random() * 1e9
+      Math.random() * 1e9,
     )}${path.extname(file.originalname)}`;
     cb(null, uniqueName);
   },
@@ -56,16 +57,18 @@ router.post("/avatar", async (req, res) => {
       if (result?.secure_url) {
         const { email } = req.user;
         try {
-          const user = await User.findOne({ email });
-          if (!user) {
-            return res.status(404).json({ msg: "User not found" });
-          }
-          user.avatar = result.secure_url;
-          await user.save();
+          await User.updateOne({ email }, { avatar: result.secure_url });
+
+          const users = await User.aggregate([
+            { $match: { email } },
+            { $project: userProjection },
+          ]);
+
           fs.unlink(req.file.path, (_) => {
             if (err) console.log("error", _);
           });
-          return res.status(201).json(user);
+
+          return res.status(201).json(users[0]);
         } catch (cachedError) {
           return res.status(500).json({ msg: cachedError.message });
         }
@@ -74,6 +77,33 @@ router.post("/avatar", async (req, res) => {
       }
     });
   });
+});
+
+router.post("/update", async (req, res) => {
+  if (!req.body.nickname) {
+    return res.status(400).json({ msg: "Nickname is required" });
+  }
+
+  const { nickname, id } = req.body;
+
+  try {
+    const storedUser = await User.findOne({ username: nickname });
+
+    if (storedUser) {
+      return res.status(400).json({ msg: "Nickname is already taken" });
+    }
+
+    await User.updateOne({ _id: new ObjectId(id) }, { username: nickname });
+
+    const user = await User.aggregate([
+      { $match: { _id: new ObjectId(id) } },
+      { $project: userProjection },
+    ]);
+
+    return res.status(200).json(user[0]);
+  } catch (error) {
+    return res.status(400).json({ msg: error.message });
+  }
 });
 
 module.exports = router;
