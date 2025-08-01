@@ -1,10 +1,10 @@
 const passport = require("passport");
 const { Strategy } = require("passport-local");
-const User = require("../database/schemas/User");
-const { comparePassword } = require("../utils/helpers");
+const User = require('@/database/schemas/User');
+const { comparePassword } = require('@/utils/helpers');
+const { userProjection } = require('@/utils/projections');
 
 passport.serializeUser((user, done) => {
-  console.log("serialize user");
   done(null, user.id);
 });
 
@@ -22,26 +22,33 @@ passport.deserializeUser(async (id, done) => {
 passport.use(
   new Strategy(
     {
-      usernameField: "email",
+      usernameField: "username",
     },
-    async (email, password, done) => {
+    async (username, password, done) => {
       try {
-        if (!email || !password)
+        if (!username || !password) {
           throw new Error("Bad request. Missing credentials");
-        const userDB = await User.findOne({ email });
-        if (!userDB) throw new Error("User not found");
-        const isValid = comparePassword(password, userDB.password);
-        if (isValid) {
-          console.log("Authenticated Successfully!");
-          done(null, userDB);
-        } else {
-          console.log("Invalid Authentication");
-          done(null, null);
         }
+
+        const user = await User.aggregate([
+          { $match: { username } },
+          { $project: { ...userProjection, password: 1 } },
+        ]);
+
+        if (!user.length)
+          return done(null, false, { message: "Invalid credentials" });
+
+        const isValid = comparePassword(password, user[0].password);
+
+        if (isValid) {
+          console.log("isValid user", user[0]);
+          return done(null, user[0]);
+        }
+
+        return done(null, false, { message: "Invalid credentials" });
       } catch (error) {
-        console.log("error", error);
-        done(error, null);
+        return done(error);
       }
-    }
-  )
+    },
+  ),
 );

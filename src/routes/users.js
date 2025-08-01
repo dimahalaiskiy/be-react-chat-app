@@ -1,6 +1,8 @@
 const { Router } = require("express");
-
-const User = require("../database/schemas/User");
+const { ObjectId } = require("mongodb");
+const User = require("@/database/schemas/User");
+const { handlePagination, createSearchQuery } = require("@/utils/request");
+const { userProjection } = require("@/utils/projections");
 
 const router = Router();
 
@@ -10,18 +12,49 @@ router.use((req, res, next) => {
 });
 
 router.get("/", async (req, res) => {
-  const {
-    query: { skip, limit, query },
-  } = req;
-  const regexName = new RegExp(query, "i");
-  const users = await User.find({ nickname: regexName })
-    .skip(skip)
-    .limit(limit);
-  const totalUsersMatchingSearchTerm = await User.countDocuments({
-    nickname: regexName,
-  });
-  const usersLeft = Math.max(0, totalUsersMatchingSearchTerm - limit);
-  res.status(200).send({ rows: users, count: usersLeft });
+  try {
+    const { query } = req.query;
+    const searchQuery = {
+      $and: [
+        createSearchQuery("username", query),
+        { _id: { $ne: req.user._id } },
+      ],
+    };
+
+    const users = await handlePagination(
+      req,
+      (skip, limit) =>
+        User.aggregate([
+          { $match: searchQuery },
+          { $project: userProjection },
+          { $skip: skip },
+          { $limit: limit },
+        ]),
+      () => User.countDocuments(searchQuery),
+    );
+
+    res.status(200).send(users);
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    res.status(500).send({ error: "Failed to fetch users" });
+  }
+});
+
+router.get("/:id", async (req, res) => {
+  try {
+    const users = await User.aggregate([
+      { $match: { _id: new ObjectId(req.params.id) } },
+      userProjection,
+    ]);
+
+    if (!users.length) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    return res.status(200).json(users[0]);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
 });
 
 module.exports = router;

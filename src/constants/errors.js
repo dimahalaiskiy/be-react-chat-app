@@ -1,0 +1,43 @@
+const MONGO_ERROR_CODES = {
+  DUPLICATE_KEY: 11000,
+  VALIDATION_FAILED: 121,
+  DOCUMENT_NOT_FOUND: 404,
+};
+
+const HTTP_STATUS = {
+  OK: 200,
+  CREATED: 201,
+  BAD_REQUEST: 400,
+  UNAUTHORIZED: 401,
+  FORBIDDEN: 403,
+  NOT_FOUND: 404,
+  CONFLICT: 409,
+  INTERNAL_SERVER_ERROR: 500,
+};
+
+const ERROR_TYPES = {
+  VALIDATION: "VALIDATION_ERROR",
+  AUTHENTICATION: "AUTHENTICATION_ERROR",
+  AUTHORIZATION: "AUTHORIZATION_ERROR",
+  DUPLICATE: "DUPLICATE_ERROR",
+  NOT_FOUND: "NOT_FOUND_ERROR",
+  SERVER: "SERVER_ERROR",
+};
+
+const ERROR_MESSAGES = {
+  USERNAME_EXISTS: "Username already exists",
+  EMAIL_EXISTS: "Email already exists",
+  INVALID_CREDENTIALS: "Invalid username or password",
+  USER_NOT_FOUND: "User not found",
+  CHAT_NOT_FOUND: "Chat not found",
+  MESSAGE_NOT_FOUND: "Message not found",
+  UNAUTHORIZED: "You are not authorized to perform this action",
+  SERVER_ERROR: "Something went wrong. Please try again later.",
+};
+
+module.exports = {
+  MONGO_ERROR_CODES,
+  HTTP_STATUS,
+  ERROR_TYPES,
+  ERROR_MESSAGES,
+};
